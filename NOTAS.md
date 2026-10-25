@@ -59,3 +59,9 @@ Box Android/Google TV no HDMI (Chromecast com Google TV, Xiaomi TV Stick, Fire T
 - `opera.json` indica um diretório `userjs` em `/opt/hisenseUI/opera_dir/userjs` (scripts carregados pelo browser) que NÃO existe no dump; não sabemos se a pasta é gravável.
 - Cadeias de arranque comentadas em `startgui.sh` mencionam `/3rd_rw/` (atualização do launcher por pacote). Não explorado: risco alto de bloquear a TV.
 - Persistência: `rememberEditApp.json` é o ficheiro que o próprio utilizador altera ao editar o ecrã inicial, por isso deve sobreviver a reinícios (por confirmar depois de um reinício).
+
+## Onde ficam os dados do launcher (25-10-2026, em investigação)
+- `descobrir_raiz.py` deu falsos positivos: o browser devolve `""` (0 bytes) para ficheiros inexistentes em `file://`. Não usar o tamanho para detetar existência; usar o nome na listagem de diretório (`procurar_raiz.py`).
+- Ficou claro que o browser consegue listar o sistema de ficheiros inteiro por `file://` (`/`, `/var/local/`, ...). `/3rd_rw/` não é listável.
+- `/var/local/hisenseUI/` só contém `opera_home` → os ficheiros de `workRoot 1` NÃO estão aí.
+- `/var/local/applications/` existe; o launcher abre páginas HTML locais daí (`E_MANUAL`: `file:///var/local/applications/Local_ebook/Ebook_<lang>/index.html`, CMDType.HISENSEPAGE). Ideia: se a pasta de `workRoot 1` for legível por `file://`, gravar lá uma página e abri-la como mosaico.
