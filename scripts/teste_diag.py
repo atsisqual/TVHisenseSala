@@ -1,9 +1,9 @@
 """Grava e abre uma página de diagnóstico: mostra no ecrã que objetos existem e que teclas chegam.
-Substitui o ficheiro de teste teste_tvmenu.html. Sair: Back/Exit."""
+Grava teste_diag.html (apagar depois). Sair: Back/Exit."""
 import json
 from _cdp import TV
-F = "teste_tvmenu.html"
-URL = "file:///var/local/applications/UI/" + F
+F = "teste_diag.html"
+URL = "file:///var/local/applications/UI/" + F + "?v=2"
 HTML = """<html><head><meta charset=utf-8></head><body style="margin:0;background:#101820;color:#fff;font:2.4vw monospace;padding:3vw">
 <div id=o></div><div id=k style="margin-top:2vw;color:#7fdc7f">teclas: (carrega no comando)</div>
 <script>
