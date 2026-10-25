@@ -44,3 +44,7 @@ Box Android/Google TV no HDMI (Chromecast com Google TV, Xiaomi TV Stick, Fire T
 - `downloadAsync`/`cache` servem para os ícones: `getLocalAppImgUrl` troca um URL de imagem por uma cópia local; se não existir, usa o URL e põe-no na lista `launcherNeedDownLoadAppImgUrl` para descarregar. Por isso o ícone de um mosaico em `BrowserAppInfo.json` tem de ser um URL de imagem que exista.
 - `mainTiles.js` (161 KB): o ecrã inicial usa `launcherTiles.initSequence`; há modo de edição (`launcher.isEditMode`), alvo de adição (`launcher.Adtarget`) e submódulo `UI.pushSubModule("launcher","allApps",true)` (linha ~1646). Hipótese (por confirmar): o caminho oficial para pôr um mosaico na fila do ecrã inicial é o modo de edição + "adicionar app", guardado por `setRememberEditAppToNativeFile`.
 - `sdk/UI.js`: `UI.dispatchKeyEvent` na linha 2623, chamada a partir das linhas 410, 2526, 2541, 2616; `UI.processKey` na linha 1840.
+
+## Extração em bruto (decisão do utilizador: preferir dados completos a grep em pedaços)
+- `scripts/dump_all.py` (autónomo, só leitura): percorre `/opt/hisenseUI/`, lê os ficheiros de dados do launcher e grava o estado em memória; junta tudo em `~/tvdump_raw.tar.gz` no telemóvel. Enviar esse ficheiro à conversa para análise completa.
+- Por confirmar com os dados: como se entra no modo de edição do ecrã inicial (`toEditMode`, `mainTiles.js`) e onde `setRememberEditAppToNativeFile` (`lib/launcherDataInterface.js:1608`) grava a ordem dos mosaicos.
