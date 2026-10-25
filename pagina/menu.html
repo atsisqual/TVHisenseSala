@@ -3,92 +3,115 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;background:#05070d;color:#fff;font-family:"Segoe UI",Roboto,Arial,Helvetica,sans-serif;cursor:none}
-.abs{position:absolute}
 #bgs div{position:absolute;left:0;top:0;width:100%;height:100%;visibility:hidden}
 #bgs div.on{visibility:visible}
 #shade{position:absolute;left:0;top:0;width:100%;height:100%;
- background:linear-gradient(90deg,rgba(5,7,13,.78) 0%,rgba(5,7,13,.35) 55%,rgba(5,7,13,.1) 100%),
-            linear-gradient(0deg,rgba(5,7,13,.95) 0%,rgba(5,7,13,.55) 32%,rgba(5,7,13,0) 60%)}
-#ghost{position:absolute;right:4vw;top:9vh;width:34vw;height:34vw;opacity:.16}
+ background:linear-gradient(90deg,rgba(5,7,13,.8) 0%,rgba(5,7,13,.3) 55%,rgba(5,7,13,.05) 100%),
+            linear-gradient(0deg,rgba(5,7,13,.96) 0%,rgba(5,7,13,.5) 30%,rgba(5,7,13,0) 58%)}
+#ghost{position:absolute;right:6vw;top:50vh;width:18vw;height:18vw;opacity:.13}
 #top{position:absolute;left:5vw;right:5vw;top:4.5vh}
-#hello{font-size:1.9vw;color:rgba(255,255,255,.72);letter-spacing:.05vw}
-#clock{position:absolute;right:0;top:-.6vh;font-size:3.6vw;font-weight:300;letter-spacing:.1vw}
-#date{position:absolute;right:.2vw;top:9.2vh;font-size:1.5vw;color:rgba(255,255,255,.6);text-align:right}
-#hero{position:absolute;left:5vw;top:24vh;width:52vw}
+#hello{font-size:1.9vw;color:rgba(255,255,255,.75);letter-spacing:.05vw}
+#clock{position:absolute;right:0;top:-.6vh;font-size:3.8vw;font-weight:300;letter-spacing:.1vw}
+#date{position:absolute;right:.2vw;top:9.2vh;font-size:1.45vw;color:rgba(255,255,255,.62);text-align:right}
+/* tempo */
+#wx{position:absolute;right:5vw;top:19vh;width:27vw;padding:1.3vw 1.5vw;border-radius:1.2vw;background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.13)}
+#wxcity{font-size:1.2vw;letter-spacing:.12vw;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.7vw}
+#wx .l1{display:block;height:5.2vw;position:relative}
+#wx #wxi{position:absolute;left:0;top:0;width:4.8vw;height:4.8vw}
+#wx #wxt{position:absolute;left:5.8vw;top:-.3vw;font-size:4.2vw;font-weight:300}
+#wx #wxc{position:absolute;right:0;top:.5vw;text-align:right;font-size:1.25vw;line-height:1.55;color:rgba(255,255,255,.72)}
+#wx #wxc b{display:block;color:#fff;font-size:1.5vw;font-weight:600}
+#wxd{margin-top:1.2vw;border-top:1px solid rgba(255,255,255,.12);padding-top:1vw;white-space:nowrap}
+#wxd .d{display:inline-block;width:33.3%;text-align:center;font-size:1.2vw;color:rgba(255,255,255,.7)}
+#wxd .d svg{display:block;margin:.3vw auto;width:2.4vw;height:2.4vw}
+#wxd .d b{color:#fff;font-weight:600}
+#hero{position:absolute;left:5vw;top:22vh;width:52vw}
 #htag{font-size:1.4vw;letter-spacing:.35vw;color:rgba(255,255,255,.65);text-transform:uppercase}
-#hname{font-size:6.6vw;font-weight:700;line-height:1.05;margin-top:1.2vh;letter-spacing:-.1vw}
+#hname{font-size:6.8vw;font-weight:700;line-height:1.05;margin-top:1.2vh;letter-spacing:-.1vw}
 #hsub{font-size:1.9vw;color:rgba(255,255,255,.78);margin-top:1.6vh;line-height:1.35}
-#hbtn{display:inline-block;margin-top:3.6vh;padding:1.2vw 3.4vw;border-radius:5vw;background:#fff;color:#0a0d16;font-size:1.8vw;font-weight:700;box-shadow:0 .8vw 3vw rgba(0,0,0,.45)}
-#rowt{position:absolute;left:5vw;top:63vh;font-size:1.5vw;color:rgba(255,255,255,.7);font-weight:600}
-#row{position:absolute;left:4.2vw;top:68vh;white-space:nowrap}
-.t{display:inline-block;vertical-align:top;width:13.2vw;margin:0 .9vw;text-align:center}
-.t .card{position:relative;width:100%;height:7.4vw;border-radius:1vw;overflow:hidden;
+#hbtn{display:inline-block;margin-top:3.4vh;padding:1.2vw 3.4vw;border-radius:5vw;background:#fff;color:#0a0d16;font-size:1.8vw;font-weight:700;box-shadow:0 .8vw 3vw rgba(0,0,0,.45)}
+#rowt{position:absolute;left:5vw;top:61vh;font-size:1.5vw;color:rgba(255,255,255,.7);font-weight:600}
+#row{position:absolute;left:4.2vw;top:66vh;white-space:nowrap}
+.t{display:inline-block;vertical-align:top;width:17.5vw;margin:0 1.2vw;text-align:center}
+.t .card{position:relative;width:100%;height:9.8vw;border-radius:1.2vw;overflow:hidden;
  box-shadow:0 .3vw .8vw rgba(0,0,0,.5);-webkit-transform:translateZ(0);transition:transform .12s linear}
-.t .card svg{position:absolute;left:50%;top:50%;width:3.9vw;height:3.9vw;margin:-1.95vw 0 0 -1.95vw}
+.t .card svg{position:absolute;left:50%;top:50%;width:5vw;height:5vw;margin:-2.5vw 0 0 -2.5vw}
 .t .card:after{content:"";position:absolute;left:0;top:0;width:100%;height:100%;
  background:linear-gradient(135deg,rgba(255,255,255,.22) 0%,rgba(255,255,255,0) 45%,rgba(0,0,0,.18) 100%)}
-.t .lb{margin-top:1.1vh;font-size:1.35vw;color:rgba(255,255,255,.55)}
+.t .lb{margin-top:1.1vh;font-size:1.45vw;color:rgba(255,255,255,.55)}
 .t.f{z-index:3}
-.t.f .card{transform:scale(1.14);box-shadow:0 0 0 .22vw #fff}
-.t.f .lb{color:#fff;font-weight:600;margin-top:2.4vh}
+.t.f .card{transform:scale(1.12);box-shadow:0 0 0 .24vw #fff}
+.t.f .lb{color:#fff;font-weight:600;margin-top:2.2vh}
 #hint{position:absolute;left:5vw;bottom:3.2vh;font-size:1.25vw;color:rgba(255,255,255,.4)}
 #load{position:absolute;left:0;top:0;width:100%;height:100%;background:rgba(5,7,13,.82);display:none;text-align:center}
 #load .sp{margin:36vh auto 0;width:5vw;height:5vw;border:.5vw solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:rot .9s linear infinite}
 #load .tx{margin-top:3vh;font-size:2.2vw}
 #err{position:absolute;left:5vw;bottom:7vh;font-size:1.6vw;color:#ffb347}
 @keyframes rot{to{transform:rotate(360deg)}}
-@keyframes up{from{opacity:0;transform:translateY(2.5vh)}to{opacity:1;transform:none}}
-.in{}
 </style></head><body>
 <div id="bgs"></div><div id="shade"></div><div id="ghost"></div>
 <div id="top"><div id="hello"></div><div id="clock"></div><div id="date"></div></div>
-<div id="hero" class="in"><div id="htag"></div><div id="hname"></div><div id="hsub"></div><div id="hbtn">Abrir</div></div>
-<div id="rowt" class="in">As tuas apps</div><div id="row" class="in"></div>
+<div id="wx"><div id="wxcity"></div><div class="l1"><svg id="wxi" viewBox="0 0 48 48"></svg><div id="wxt">--°</div><div id="wxc"><b id="wxdesc">a obter o tempo…</b><span id="wxmm"></span></div></div><div id="wxd"></div></div>
+<div id="hero"><div id="htag"></div><div id="hname"></div><div id="hsub"></div><div id="hbtn">Abrir</div></div>
+<div id="rowt">As tuas apps</div><div id="row"></div>
 <div id="hint">◄ ► navegar &nbsp;&nbsp; OK abrir</div>
 <div id="err"></div>
 <div id="load"><div class="sp"></div><div class="tx" id="ltx"></div></div>
 <script>
-/* ===== CONFIGURAÇÃO: editar aqui para mudar ou acrescentar mosaicos =====
-   n=nome, k=APPNAME no launcher (apps nativas) OU url=endereço http (abre no browser)
-   c=cor, g=cor do brilho, ic=ícone (netflix,play,dm,sun,game,globe), sub=descrição */
+/* ===== CONFIGURAÇÃO =====
+   n=nome, k=APPNAME do launcher (app nativa) OU url=endereço http, c=cor, ic=ícone (netflix,play,game,globe,dm,sun) */
 var TV='192.168.1.85:9223';
+var CIDADE={nome:'Vila Nova de Famalicão',lat:41.41,lon:-8.52};
 var TILES=[
- {n:'Netflix',     k:'NETFLIX',     c:'#c40a16',g:'rgba(229,9,20,.7)',  ic:'netflix',tag:'Séries e filmes',  sub:'Os teus filmes e séries favoritos.'},
- {n:'YouTube',     k:'YOUTUBE',     c:'#d81f1f',g:'rgba(255,40,40,.65)',ic:'play',   tag:'Vídeos',           sub:'Vídeos, música e canais que segues.'},
- {n:'Dailymotion', k:'DAILYMOTION', c:'#0a5bd6',g:'rgba(40,120,255,.7)',ic:'dm',     tag:'Vídeos',           sub:'Vídeos de todo o mundo.'},
- {n:'Meteorologia',k:'ACCUWEATHER', c:'#1b8a5c',g:'rgba(40,200,130,.6)',ic:'sun',    tag:'Tempo',            sub:'Previsão do tempo para a tua zona.'},
- {n:'Jogos',       k:'GAMECENTER',  c:'#6a3fcf',g:'rgba(150,100,255,.65)',ic:'game', tag:'Entretenimento',   sub:'Jogos para toda a família.'},
- {n:'Browser',     k:'TVBROWSER',   c:'#2271c4',g:'rgba(60,150,255,.65)',ic:'globe', tag:'Internet',         sub:'Navega na internet na TV.'}
+ {n:'Netflix',k:'NETFLIX',   c:'#c40a16',ic:'netflix',tag:'Séries e filmes', sub:'Os teus filmes e séries favoritos.'},
+ {n:'YouTube',k:'YOUTUBE',   c:'#d81f1f',ic:'play',   tag:'Vídeos',          sub:'Vídeos, música e canais que segues.'},
+ {n:'Jogos',  k:'GAMECENTER',c:'#6a3fcf',ic:'game',   tag:'Entretenimento',  sub:'Jogos para toda a família.'}
 ];
-/* ====================================================================== */
+/* ======================== */
 function ICON(t,bg){
  var s='<svg viewBox="0 0 48 48" fill="#fff" stroke="none">';
  if(t=='netflix')s+='<path d="M12 5h8l12 25V5h8v38h-8L20 18v25h-8z"/>';
  else if(t=='play')s+='<rect x="3" y="10" width="42" height="28" rx="9"/><path d="M19 17l12 7-12 7z" fill="'+bg+'"/>';
  else if(t=='dm')s+='<path fill-rule="evenodd" d="M34 5v38h-7v-4.4A13 13 0 1 1 27 17.4V5zM20 20.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15z"/>';
- else if(t=='sun')s+='<circle cx="24" cy="24" r="8.5"/><g stroke="#fff" stroke-width="3.4" stroke-linecap="round"><path d="M24 4v6M24 38v6M4 24h6M38 24h6M9.9 9.9l4.2 4.2M33.9 33.9l4.2 4.2M9.9 38.1l4.2-4.2M33.9 14.1l4.2-4.2"/></g>';
  else if(t=='game')s+='<rect x="3" y="12" width="42" height="24" rx="12"/><path d="M13 20h3v3h3v3h-3v3h-3v-3h-3v-3h3z" fill="'+bg+'"/><circle cx="31" cy="21" r="2.4" fill="'+bg+'"/><circle cx="37" cy="27" r="2.4" fill="'+bg+'"/>';
  else s+='<g fill="none" stroke="#fff" stroke-width="3"><circle cx="24" cy="24" r="18"/><ellipse cx="24" cy="24" rx="8" ry="18"/><path d="M6 24h36M9 14h30M9 34h30"/></g>';
  return s+'</svg>';
 }
+/* ícones do tempo (conteúdo interno de um svg 48x48) */
+var CL='<path d="M14 36a8 8 0 0 1 0-16 11 11 0 0 1 21-2 9 9 0 0 1 0 18z" fill="#fff"/>';
+function WI(code,day){
+ var sun='<circle cx="24" cy="24" r="8.5" fill="#ffd24a"/><g stroke="#ffd24a" stroke-width="3.4" stroke-linecap="round"><path d="M24 4v6M24 38v6M4 24h6M38 24h6M9.9 9.9l4.2 4.2M33.9 33.9l4.2 4.2M9.9 38.1l4.2-4.2M33.9 14.1l4.2-4.2"/></g>';
+ var moon='<path d="M30 6a18 18 0 1 0 12 30A15 15 0 0 1 30 6z" fill="#dfe6ff"/>';
+ var up='<g transform="translate(0 -6)">'+CL+'</g>';
+ if(code===0)return day?sun:moon;
+ if(code<=2)return (day?'<circle cx="17" cy="16" r="7" fill="#ffd24a"/>':'<path d="M20 6a11 11 0 1 0 8 18A9 9 0 0 1 20 6z" fill="#dfe6ff"/>')+'<g transform="translate(5 5)">'+CL+'</g>';
+ if(code==3)return '<g transform="translate(0 2)">'+CL+'</g>';
+ if(code==45||code==48)return up+'<path d="M10 36h28M14 42h20" stroke="#fff" stroke-width="3" stroke-linecap="round"/>';
+ if(code>=71&&code<=77||code==85||code==86)return up+'<g fill="#fff"><circle cx="16" cy="38" r="2.4"/><circle cx="24" cy="43" r="2.4"/><circle cx="32" cy="38" r="2.4"/></g>';
+ if(code>=95)return up+'<path d="M25 30l-6 9h5l-2 8 9-11h-5l3-6z" fill="#ffd24a"/>';
+ return up+'<path d="M15 36l-2 6M24 36l-2 6M33 36l-2 6" stroke="#7ec8ff" stroke-width="3" stroke-linecap="round"/>';
+}
+function WD(c){
+ if(c===0)return 'Céu limpo';if(c<=2)return 'Pouco nublado';if(c==3)return 'Nublado';if(c==45||c==48)return 'Nevoeiro';
+ if(c>=51&&c<=57)return 'Chuvisco';if(c>=61&&c<=67)return 'Chuva';if(c>=71&&c<=77)return 'Neve';if(c>=80&&c<=82)return 'Aguaceiros';
+ if(c>=85&&c<=86)return 'Neve';if(c>=95)return 'Trovoada';return 'Variável';
+}
 function $(i){return document.getElementById(i)}
-var cur=0,busy=false,errT=null,heroT=null;
+var cur=0,busy=false,errT=null;
 function build(){
  var bg='',row='';
  for(var i=0;i<TILES.length;i++){var t=TILES[i];
   bg+='<div id="bg'+i+'" style="background:radial-gradient(120% 90% at 78% 12%,'+t.c+' 0%,'+shade(t.c)+' 55%,#05070d 100%)"></div>';
-  row+='<div class="t" id="t'+i+'" style="--glow:'+t.g+'"><div class="card" style="background:'+t.c+'">'+ICON(t.ic,t.c)+'</div><div class="lb">'+t.n+'</div></div>';}
- $('bgs').innerHTML=bg;$('row').innerHTML=row;show(true);
+  row+='<div class="t" id="t'+i+'"><div class="card" style="background:'+t.c+'">'+ICON(t.ic,t.c)+'</div><div class="lb">'+t.n+'</div></div>';}
+ $('bgs').innerHTML=bg;$('row').innerHTML=row;show();
 }
 function shade(h){var n=parseInt(h.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;
  return 'rgb('+Math.round(r*.28)+','+Math.round(g*.28)+','+Math.round(b*.28)+')'}
-function show(first){
+function show(){
  for(var i=0;i<TILES.length;i++){$('t'+i).className='t'+(i==cur?' f':'');$('bg'+i).className=i==cur?'on':''}
  var t=TILES[cur];
- var apply=function(){$('htag').innerHTML=t.tag;$('hname').innerHTML=t.n;$('hsub').innerHTML=t.sub;
-  $('ghost').innerHTML=ICON(t.ic,t.c).replace('<svg','<svg width="100%" height="100%"');$('hero').className='';};
- if(first){apply();return}
-apply();
+ $('htag').innerHTML=t.tag;$('hname').innerHTML=t.n;$('hsub').innerHTML=t.sub;
+ $('ghost').innerHTML=ICON(t.ic,t.c).replace('<svg','<svg width="100%" height="100%"');
 }
 function aviso(s){$('err').innerHTML=s;clearTimeout(errT);errT=setTimeout(function(){$('err').innerHTML=''},5000)}
 function fim(){busy=false;$('load').style.display='none'}
@@ -117,8 +140,32 @@ document.addEventListener('keydown',function(e){
  else m=false;
  if(m)e.preventDefault();
 },true);
-document.addEventListener('visibilitychange',function(){if(!document.hidden)fim()});
 window.addEventListener('focus',fim);
+/* ---- tempo (open-meteo; tenta https e depois http; guarda a última resposta) ---- */
+var DS=['dom','seg','ter','qua','qui','sex','sáb'];
+function pintaTempo(j){
+ try{
+  var c=j.current,d=j.daily;
+  $('wxi').innerHTML=WI(c.weather_code,c.is_day==1);
+  $('wxt').innerHTML=Math.round(c.temperature_2m)+'°';
+  $('wxcity').innerHTML=CIDADE.nome;$('wxdesc').innerHTML=WD(c.weather_code);
+  $('wxmm').innerHTML='máx '+Math.round(d.temperature_2m_max[0])+'° · mín '+Math.round(d.temperature_2m_min[0])+'°';
+  var h='';for(var i=1;i<=3;i++){var dt=new Date(d.time[i]+'T12:00:00');
+   h+='<div class="d">'+DS[dt.getDay()]+'<svg viewBox="0 0 48 48">'+WI(d.weather_code[i],true)+'</svg><b>'+Math.round(d.temperature_2m_max[i])+'°</b> '+Math.round(d.temperature_2m_min[i])+'°</div>';}
+  $('wxd').innerHTML=h;
+ }catch(e){}
+}
+function tempo(proto){
+ var q='://api.open-meteo.com/v1/forecast?latitude='+CIDADE.lat+'&longitude='+CIDADE.lon+
+  '&current=temperature_2m,weather_code,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=4';
+ var x=new XMLHttpRequest();x.open('GET',proto+q,true);x.timeout=10000;
+ var falha=function(){if(proto=='https')tempo('http');else $('wxdesc').innerHTML='sem ligação'};
+ x.onerror=falha;x.ontimeout=falha;
+ x.onload=function(){try{var j=JSON.parse(x.responseText);pintaTempo(j);try{localStorage.setItem('wx',x.responseText)}catch(e){}}catch(e){falha()}};
+ x.send();
+}
+try{var o=localStorage.getItem('wx');if(o)pintaTempo(JSON.parse(o))}catch(e){}
+tempo('https');setInterval(function(){tempo('https')},30*60*1000);
 var D=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'],
  M=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 function relogio(){var d=new Date(),p=function(n){return n<10?'0'+n:n},h=d.getHours();
