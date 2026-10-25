@@ -18,5 +18,5 @@ document.addEventListener('keydown',reg,true);document.addEventListener('keyup',
 </script></body></html>"""
 tv = TV()
 print("write ->", tv.ev("Hisense.File.write(%s,%s,1)" % (json.dumps(F), json.dumps(HTML))))
-tv.ev("UI.popAllModule(); startThirdPartyApp(APPNAME.E_MANUAL,%s,CMDType.HISENSEPAGE,CMDMethod.COMMANDURL,false); true" % json.dumps(URL))
+tv.ev("UI.popAllModule(); startThirdPartyApp(APPNAME.THIRDPARTY,%s,CMDType.NATIVEAPP,CMDMethod.MENU,false,\"#FFFFFF\",\"tvmenu\",StoreType.HISENSE); true" % json.dumps(URL))
 print("aberto")

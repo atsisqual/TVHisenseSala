@@ -71,3 +71,5 @@ Box Android/Google TV no HDMI (Chromecast com Google TV, Xiaomi TV Stick, Fire T
 - `/var/local/applications/` tem: channel, emanual, eula, Local_ebook, UI.
 - O launcher abre páginas locais com `startThirdPartyApp(APPNAME.E_MANUAL, "file:///...", CMDType.HISENSEPAGE, CMDMethod.COMMANDURL, false)` (`SettingAboutEntry.js:308`).
 - Por testar: `scripts/listar_ui.py` (só leitura) e `scripts/teste_escrita.py` (grava/abre/apaga um ficheiro de teste). Se a escrita e a abertura funcionarem, o menu Android TV pode ficar como página guardada na TV + mosaico cmd 14.
+- Escrita em workRoot 1 FUNCIONA (`Hisense.File.write(f,html,1)` -> 0; lê-se por file://). Abrir por `E_MANUAL`+HISENSEPAGE funciona à 1.ª vez mas depois NÃO recarrega: se a app é a "app atual", `startThirdPartyApp` só faz `focusCurrentApp()` (PubFunc.js ~5318). Usar `APPNAME.THIRDPARTY` (="opera4x") com `appParam` próprio e `StoreType.HISENSE` (99) -> `:am,opera4x,:resume=[-s,hisense,-u,URL]`.
+- A página aberta corre fora do DevTools (só há o alvo `UI`), por isso o diagnóstico é feito no próprio ecrã (`teste_diag.py`).
