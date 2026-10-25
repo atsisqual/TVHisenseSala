@@ -32,7 +32,7 @@ Dar à TV um menu de apps com aspeto Android TV, e poder adicionar atalhos. Não
 - Tudo o que é injetado fica só em memória; um reinício (ou `reload.py`) apaga. A única coisa persistente foi o mosaico "Início" (`BrowserAppInfo.json`).
 
 ## Estado atual (25-10-2026)
-- Menu Android TV (scripts/menu.py): as teclas já funcionam; falta confirmar que o OK abre as apps.
+- Menu Android TV (scripts/menu.py): as teclas já funcionam; falta confirmar que o OK abre as apps. `scripts/keepalive.py` volta a injetá-lo se a TV reiniciar.
 - Scrape do launcher feito no telemóvel (`~/tvdump/`, 51 scripts). Ficheiros maiores: `mainTiles.js` 161 KB, `launcherDataInterface.js` 123 KB, `UI.js` 145 KB.
 - Próximo passo: ler `mainTiles.js`, `allApps.js` e `UI.js` para ver como o ecrã de apps é desenhado e como ligar o menu sem tapar o launcher.
 
@@ -48,3 +48,14 @@ Box Android/Google TV no HDMI (Chromecast com Google TV, Xiaomi TV Stick, Fire T
 ## Extração em bruto (decisão do utilizador: preferir dados completos a grep em pedaços)
 - `scripts/dump_all.py` (autónomo, só leitura): percorre `/opt/hisenseUI/`, lê os ficheiros de dados do launcher e grava o estado em memória; junta tudo em `~/tvdump_raw.tar.gz` no telemóvel. Enviar esse ficheiro à conversa para análise completa.
 - Por confirmar com os dados: como se entra no modo de edição do ecrã inicial (`toEditMode`, `mainTiles.js`) e onde `setRememberEditAppToNativeFile` (`lib/launcherDataInterface.js:1608`) grava a ordem dos mosaicos.
+
+
+## Resultados do dump em bruto (tvdump_raw.tar.gz, 25-10-2026)
+- A pasta `/opt/hisenseUI/` tem 4244 ficheiros: `html/` (a interface, ~4179), `opera_dir`, `opera_home`, `appdata`, `bin` e os scripts de arranque (`startgui.sh`, `hisenseUI_env.sh`). A interface corre num browser Opera (SDK de dispositivos), por isso há DevTools na 9223.
+- **Os mosaicos do ecrã inicial vivem em `launcher/rememberEditApp.json`** (workRoot 1), formato `{"countryCode":"PRT","appInfo":[{Name,Icon,url,cmd,data:{appimg,canMove,canRemove,img,storeType,txt,url,urlType}}]}`. Escreve-o `setRememberEditAppToNativeFile`, o mesmo que o modo de edição da TV usa. Linha do utilizador no momento do dump: Search, Apps, **Teste** (resto do nosso teste, aponta para example.com), Inputs, Media, Settings.
+- Um mosaico personalizado é uma entrada `cmd:14` com `data.url`, `data.urlType` (36=web, 37=app nativa) e `data.storeType`. Ao carregar OK, o launcher chama `startThirdPartyApp(null, url, urlType, CMDMethod.MENU, false, 0xFFFFFF, nome, storeType)`.
+- `BrowserAppInfo.json` deixou de existir depois de o mosaico ser integrado; só é apagado se estiver mal formado ou ao remover o mosaico.
+- **No ecrã inicial, com um mosaico focado: UP = modo de mover, DOWN = modo de editar** (`launcherTiles.onkey_UP/DOWN` em `mainTiles.js`).
+- `opera.json` indica um diretório `userjs` em `/opt/hisenseUI/opera_dir/userjs` (scripts carregados pelo browser) que NÃO existe no dump; não sabemos se a pasta é gravável.
+- Cadeias de arranque comentadas em `startgui.sh` mencionam `/3rd_rw/` (atualização do launcher por pacote). Não explorado: risco alto de bloquear a TV.
+- Persistência: `rememberEditApp.json` é o ficheiro que o próprio utilizador altera ao editar o ecrã inicial, por isso deve sobreviver a reinícios (por confirmar depois de um reinício).
