@@ -1,22 +1,31 @@
-"""Grava e abre uma página de diagnóstico: mostra no ecrã que objetos existem e que teclas chegam.
-Grava teste_diag.html (apagar depois). Sair: Back/Exit."""
-import json
+"""Diagnóstico v2: página guardada na TV (teste_diag2.html). Mostra opener/Hisense e teclas.
+Carregar OK (13) tenta abrir o YouTube através do opener. Sair: Back/Exit. Apagar depois: teste_escrita.py --apagar (ficheiro teste_tvmenu.html) e Hisense.File.delete de teste_diag*.html"""
+import json, time
 from _cdp import TV
-F = "teste_diag.html"
-URL = "file:///var/local/applications/UI/" + F + "?v=2"
-HTML = """<html><head><meta charset=utf-8></head><body style="margin:0;background:#101820;color:#fff;font:2.4vw monospace;padding:3vw">
-<div id=o></div><div id=k style="margin-top:2vw;color:#7fdc7f">teclas: (carrega no comando)</div>
+F = "teste_diag2.html"
+URL = "file:///var/local/applications/UI/" + F
+HTML = r"""<html><head><meta charset=utf-8></head><body style="margin:0;background:#101820;color:#fff;font:2vw monospace;padding:2vw">
+<div id=o></div><div id=k style="margin-top:1.5vw;color:#7fdc7f">teclas: (carrega no comando)</div><div id=r style="margin-top:1vw;color:#ffd24a"></div>
 <script>
-var n=['Hisense','UI','startThirdPartyApp','APPNAME','CMDType','GLOBAL','Config','opera','window.parent','window.opener'];
+function T(f){try{return f()}catch(e){return 'ERRO '+String(e.message||e).slice(0,40)}}
 var s='';
-for(var i=0;i<n.length;i++){var t;try{t=typeof eval(n[i])}catch(e){t='ERRO'}s+=n[i]+': '+t+'<br>'}
-s+='top==self: '+(window.top===window.self)+'<br>UA: '+navigator.userAgent.slice(0,90);
+s+='opener type: '+T(function(){return typeof window.opener})+'<br>';
+s+='opener.location: '+T(function(){return String(window.opener.location.href).slice(-45)})+'<br>';
+s+='opener.UI: '+T(function(){return typeof window.opener.UI})+'<br>';
+s+='opener.startThirdPartyApp: '+T(function(){return typeof window.opener.startThirdPartyApp})+'<br>';
+s+='parent==self: '+(window.parent===window)+'<br>';
+s+='Hisense keys: '+T(function(){return Object.keys(Hisense).join(',')})+'<br>';
+s+='Hisense.File: '+T(function(){var a=[];for(var k in Hisense.File)a.push(k);return a.join(',')})+'<br>';
+s+='location: '+location.href.slice(-40);
 document.getElementById('o').innerHTML=s;
-var log=[];
-function reg(e){log.unshift((e.type||'?')+' '+(e.keyCode||e.which)+' '+(e.key||''));log=log.slice(0,6);document.getElementById('k').innerHTML='teclas:<br>'+log.join('<br>')}
-document.addEventListener('keydown',reg,true);document.addEventListener('keyup',reg,true);
+var log=[],cnt=0;
+function reg(e){cnt++;var c=e.keyCode||e.which||e.charCode;log.unshift(cnt+' '+e.type+' '+c+' '+(e.key||''));log=log.slice(0,6);document.getElementById('k').innerHTML='teclas:<br>'+log.join('<br>');
+ if(e.type=='keydown'&&c==13){var m=T(function(){var w=window.opener;w.UI.popAllModule();w.startThirdPartyApp(w.APPNAME.YOUTUBE,w.APPNAME.YOUTUBE,w.CMDType.NATIVEAPP,w.CMDMethod.MENU,false);return 'pedido enviado'});document.getElementById('r').innerHTML='OK -> YouTube: '+m}}
+['keydown','keyup','keypress'].forEach(function(t){document.addEventListener(t,reg,true);window.addEventListener(t,reg,true)});
+document.body.setAttribute('tabindex','0');document.body.focus();
 </script></body></html>"""
 tv = TV()
 print("write ->", tv.ev("Hisense.File.write(%s,%s,1)" % (json.dumps(F), json.dumps(HTML))))
-tv.ev("UI.popAllModule(); startThirdPartyApp(APPNAME.THIRDPARTY,%s,CMDType.NATIVEAPP,CMDMethod.MENU,false,\"#FFFFFF\",\"tvmenu\",StoreType.HISENSE); true" % json.dumps(URL))
+nome = "tvmenu" + str(int(time.time()))
+tv.ev("UI.popAllModule(); startThirdPartyApp(APPNAME.THIRDPARTY,%s,CMDType.NATIVEAPP,CMDMethod.MENU,false,\"#FFFFFF\",%s,StoreType.HISENSE); true" % (json.dumps(URL + "?v=" + nome), json.dumps(nome)))
 print("aberto")
