@@ -81,3 +81,8 @@ Box Android/Google TV no HDMI (Chromecast com Google TV, Xiaomi TV Stick, Fire T
 - [chrisns/hisense_vidaa](https://github.com/chrisns/hisense_vidaa) usa a mesma porta 9223 sem auth (TV 2016, OMI/4.7): `Runtime.evaluate`, `changeSourceTo(uid)`, `model.source.*`, `model.video.*`.
 - Nenhum projeto muda o ecrã inicial: o do Zfinix diz que o VIDAA não permite substituí-lo (usa um watcher que abre a página quando a TV está no início).
 - Por testar na A6100 (U2.5): `hisense://debug` no Browser e `scripts/ver_install.py`.
+
+## Apps instaladas por `hisense://debug` (25-10-2026) — descoberta chave
+- No Browser da TV, `hisense://debug` abre o formulário (App Name, Thumbnail, IconSmall, IconLarge, App Url, INSTALL). **O URL tem de começar por http/https** (file:// recusado).
+- A app instalada ("Teste", `http://192.168.1.127:8099/d.html`) aparece na lista de apps e **recebe as teclas do comando** (keydown/keyup 38/40, ArrowUp/ArrowDown). `opener` é null, `Hisense` vazio, sem UI/startThirdPartyApp.
+- Ideia em teste: a página fala com `ws://192.168.1.85:9223` (DevTools) para pedir ao launcher que abra as apps nativas. Pode falhar por CORS no `/json` (precisa do UUID da página). Falta decidir onde alojar a página de forma permanente (GitHub Pages por https? certificados antigos na TV).
