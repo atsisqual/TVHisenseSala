@@ -1,20 +1,31 @@
-<html><head><meta charset=utf-8></head><body style="margin:0;background:#101820;color:#fff;font:2vw monospace;padding:2vw">
-<div id=o></div><div id=k style="margin-top:1.5vw;color:#7fdc7f">teclas: (carrega no comando)</div><div id=r style="margin-top:1vw;color:#ffd24a"></div>
+<html><head><meta charset=utf-8></head><body style="margin:0;background:#101820;color:#fff;font:2.2vw monospace;padding:2vw">
+<div>Teste v3: teclas + ligacao ao launcher (9223)</div>
+<div id=a style="margin-top:1vw;color:#ffd24a">a ligar...</div>
+<div id=k style="margin-top:1vw;color:#7fdc7f">teclas: (carrega no comando)</div>
+<div id=r style="margin-top:1vw;color:#ff9a9a"></div>
 <script>
-function T(f){try{return f()}catch(e){return 'ERRO '+String(e.message||e).slice(0,40)}}
-var s='';
-s+='opener type: '+T(function(){return typeof window.opener})+'<br>';
-s+='opener.location: '+T(function(){return String(window.opener.location.href).slice(-45)})+'<br>';
-s+='opener.UI: '+T(function(){return typeof window.opener.UI})+'<br>';
-s+='opener.startThirdPartyApp: '+T(function(){return typeof window.opener.startThirdPartyApp})+'<br>';
-s+='parent==self: '+(window.parent===window)+'<br>';
-s+='Hisense keys: '+T(function(){return Object.keys(Hisense).join(',')})+'<br>';
-s+='Hisense.File: '+T(function(){var a=[];for(var k in Hisense.File)a.push(k);return a.join(',')})+'<br>';
-s+='location: '+location.href.slice(-40);
-document.getElementById('o').innerHTML=s;
+var H='192.168.1.85:9223', wsUrl=null;
+function $(i){return document.getElementById(i)}
+function ligar(){
+  try{
+    var x=new XMLHttpRequest(); x.open('GET','http://'+H+'/json',true);
+    x.onload=function(){try{var j=JSON.parse(x.responseText);wsUrl=j[0].webSocketDebuggerUrl;$('a').innerHTML='/json OK -> '+wsUrl.slice(-30)}catch(e){$('a').innerHTML='/json lido mas erro: '+e.message}};
+    x.onerror=function(){$('a').innerHTML='/json BLOQUEADO (CORS/rede)'};
+    x.send();
+  }catch(e){$('a').innerHTML='ERRO '+e.message}
+}
+function lancar(expr){
+  if(!wsUrl){$('r').innerHTML='sem wsUrl';return}
+  try{
+    var w=new WebSocket(wsUrl.replace(/^ws:\/\/[^\/]+/,'ws://'+H));
+    w.onopen=function(){w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:expr,returnByValue:true}}))};
+    w.onmessage=function(m){$('r').innerHTML='resposta: '+String(m.data).slice(0,120);w.close()};
+    w.onerror=function(){$('r').innerHTML='WebSocket erro'};
+  }catch(e){$('r').innerHTML='ERRO ws '+e.message}
+}
 var log=[],cnt=0;
-function reg(e){cnt++;var c=e.keyCode||e.which||e.charCode;log.unshift(cnt+' '+e.type+' '+c+' '+(e.key||''));log=log.slice(0,6);document.getElementById('k').innerHTML='teclas:<br>'+log.join('<br>');
- if(e.type=='keydown'&&c==13){var m=T(function(){var w=window.opener;w.UI.popAllModule();w.startThirdPartyApp(w.APPNAME.YOUTUBE,w.APPNAME.YOUTUBE,w.CMDType.NATIVEAPP,w.CMDMethod.MENU,false);return 'pedido enviado'});document.getElementById('r').innerHTML='OK -> YouTube: '+m}}
-['keydown','keyup','keypress'].forEach(function(t){document.addEventListener(t,reg,true);window.addEventListener(t,reg,true)});
-document.body.setAttribute('tabindex','0');document.body.focus();
+function reg(e){cnt++;var c=e.keyCode||e.which;log.unshift(cnt+' '+e.type+' '+c);log=log.slice(0,5);$('k').innerHTML='teclas:<br>'+log.join('<br>');
+ if(e.type=='keydown'&&c==13){lancar("UI.popAllModule(); startThirdPartyApp(APPNAME.YOUTUBE,APPNAME.YOUTUBE,CMDType.NATIVEAPP,CMDMethod.MENU,false); 'ok'")}}
+document.addEventListener('keydown',reg,true);document.addEventListener('keyup',reg,true);
+ligar();
 </script></body></html>
