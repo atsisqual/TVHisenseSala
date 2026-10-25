@@ -65,3 +65,9 @@ Box Android/Google TV no HDMI (Chromecast com Google TV, Xiaomi TV Stick, Fire T
 - Ficou claro que o browser consegue listar o sistema de ficheiros inteiro por `file://` (`/`, `/var/local/`, ...). `/3rd_rw/` não é listável.
 - `/var/local/hisenseUI/` só contém `opera_home` → os ficheiros de `workRoot 1` NÃO estão aí.
 - `/var/local/applications/` existe; o launcher abre páginas HTML locais daí (`E_MANUAL`: `file:///var/local/applications/Local_ebook/Ebook_<lang>/index.html`, CMDType.HISENSEPAGE). Ideia: se a pasta de `workRoot 1` for legível por `file://`, gravar lá uma página e abri-la como mosaico.
+
+## workRoot 1 localizado (25-10-2026)
+- `rAppVersion` está em `/var/local/applications/UI/` (pasta com hiAvsService, hisenseUI, launcher, notify, weather, deviceId, ...). Logo workRoot 1 = `/var/local/applications/UI/` (inferido). Legível por `file://`.
+- `/var/local/applications/` tem: channel, emanual, eula, Local_ebook, UI.
+- O launcher abre páginas locais com `startThirdPartyApp(APPNAME.E_MANUAL, "file:///...", CMDType.HISENSEPAGE, CMDMethod.COMMANDURL, false)` (`SettingAboutEntry.js:308`).
+- Por testar: `scripts/listar_ui.py` (só leitura) e `scripts/teste_escrita.py` (grava/abre/apaga um ficheiro de teste). Se a escrita e a abertura funcionarem, o menu Android TV pode ficar como página guardada na TV + mosaico cmd 14.
