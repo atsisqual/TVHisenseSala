@@ -4,33 +4,32 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;background:#05070d;color:#fff;font-family:"Segoe UI",Roboto,Arial,Helvetica,sans-serif;cursor:none}
 .abs{position:absolute}
-#bgs div{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;transition:opacity .7s ease}
-#bgs div.on{opacity:1}
+#bgs div{position:absolute;left:0;top:0;width:100%;height:100%;visibility:hidden}
+#bgs div.on{visibility:visible}
 #shade{position:absolute;left:0;top:0;width:100%;height:100%;
  background:linear-gradient(90deg,rgba(5,7,13,.78) 0%,rgba(5,7,13,.35) 55%,rgba(5,7,13,.1) 100%),
             linear-gradient(0deg,rgba(5,7,13,.95) 0%,rgba(5,7,13,.55) 32%,rgba(5,7,13,0) 60%)}
-#ghost{position:absolute;right:4vw;top:9vh;width:34vw;height:34vw;opacity:.16;transition:opacity .25s}
+#ghost{position:absolute;right:4vw;top:9vh;width:34vw;height:34vw;opacity:.16}
 #top{position:absolute;left:5vw;right:5vw;top:4.5vh}
 #hello{font-size:1.9vw;color:rgba(255,255,255,.72);letter-spacing:.05vw}
 #clock{position:absolute;right:0;top:-.6vh;font-size:3.6vw;font-weight:300;letter-spacing:.1vw}
 #date{position:absolute;right:.2vw;top:9.2vh;font-size:1.5vw;color:rgba(255,255,255,.6);text-align:right}
-#hero{position:absolute;left:5vw;top:24vh;width:52vw;transition:opacity .16s ease,transform .16s ease}
-#hero.out{opacity:0;transform:translateX(-1.2vw)}
+#hero{position:absolute;left:5vw;top:24vh;width:52vw}
 #htag{font-size:1.4vw;letter-spacing:.35vw;color:rgba(255,255,255,.65);text-transform:uppercase}
 #hname{font-size:6.6vw;font-weight:700;line-height:1.05;margin-top:1.2vh;letter-spacing:-.1vw}
 #hsub{font-size:1.9vw;color:rgba(255,255,255,.78);margin-top:1.6vh;line-height:1.35}
 #hbtn{display:inline-block;margin-top:3.6vh;padding:1.2vw 3.4vw;border-radius:5vw;background:#fff;color:#0a0d16;font-size:1.8vw;font-weight:700;box-shadow:0 .8vw 3vw rgba(0,0,0,.45)}
 #rowt{position:absolute;left:5vw;top:63vh;font-size:1.5vw;color:rgba(255,255,255,.7);font-weight:600}
 #row{position:absolute;left:4.2vw;top:68vh;white-space:nowrap}
-.t{display:inline-block;vertical-align:top;width:13.2vw;margin:0 .9vw;text-align:center;transition:transform .18s cubic-bezier(.2,.8,.3,1)}
+.t{display:inline-block;vertical-align:top;width:13.2vw;margin:0 .9vw;text-align:center}
 .t .card{position:relative;width:100%;height:7.4vw;border-radius:1vw;overflow:hidden;
- box-shadow:0 .5vw 1.6vw rgba(0,0,0,.55);transition:box-shadow .18s,transform .18s cubic-bezier(.2,.8,.3,1)}
+ box-shadow:0 .3vw .8vw rgba(0,0,0,.5);-webkit-transform:translateZ(0);transition:transform .12s linear}
 .t .card svg{position:absolute;left:50%;top:50%;width:3.9vw;height:3.9vw;margin:-1.95vw 0 0 -1.95vw}
 .t .card:after{content:"";position:absolute;left:0;top:0;width:100%;height:100%;
  background:linear-gradient(135deg,rgba(255,255,255,.22) 0%,rgba(255,255,255,0) 45%,rgba(0,0,0,.18) 100%)}
-.t .lb{margin-top:1.1vh;font-size:1.35vw;color:rgba(255,255,255,.55);transition:color .18s}
+.t .lb{margin-top:1.1vh;font-size:1.35vw;color:rgba(255,255,255,.55)}
 .t.f{z-index:3}
-.t.f .card{transform:scale(1.16);box-shadow:0 0 0 .22vw #fff,0 1.2vw 3.4vw rgba(0,0,0,.7),0 0 4vw var(--glow)}
+.t.f .card{transform:scale(1.14);box-shadow:0 0 0 .22vw #fff}
 .t.f .lb{color:#fff;font-weight:600;margin-top:2.4vh}
 #hint{position:absolute;left:5vw;bottom:3.2vh;font-size:1.25vw;color:rgba(255,255,255,.4)}
 #load{position:absolute;left:0;top:0;width:100%;height:100%;background:rgba(5,7,13,.82);display:none;text-align:center}
@@ -39,7 +38,7 @@ html,body{height:100%;overflow:hidden;background:#05070d;color:#fff;font-family:
 #err{position:absolute;left:5vw;bottom:7vh;font-size:1.6vw;color:#ffb347}
 @keyframes rot{to{transform:rotate(360deg)}}
 @keyframes up{from{opacity:0;transform:translateY(2.5vh)}to{opacity:1;transform:none}}
-.in{animation:up .6s ease both}
+.in{}
 </style></head><body>
 <div id="bgs"></div><div id="shade"></div><div id="ghost"></div>
 <div id="top"><div id="hello"></div><div id="clock"></div><div id="date"></div></div>
@@ -89,7 +88,7 @@ function show(first){
  var apply=function(){$('htag').innerHTML=t.tag;$('hname').innerHTML=t.n;$('hsub').innerHTML=t.sub;
   $('ghost').innerHTML=ICON(t.ic,t.c).replace('<svg','<svg width="100%" height="100%"');$('hero').className='';};
  if(first){apply();return}
- clearTimeout(heroT);$('hero').className='out';heroT=setTimeout(apply,150);
+apply();
 }
 function aviso(s){$('err').innerHTML=s;clearTimeout(errT);errT=setTimeout(function(){$('err').innerHTML=''},5000)}
 function fim(){busy=false;$('load').style.display='none'}
