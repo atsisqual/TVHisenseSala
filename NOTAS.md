@@ -93,3 +93,4 @@ Box Android/Google TV no HDMI (Chromecast com Google TV, Xiaomi TV Stick, Fire T
 - Tempo: open-meteo (https com fallback http), Vila Nova de Famalicão (41.41, -8.52); cache em localStorage. Por confirmar que a TV aceita o certificado.
 - Jogos em `pagina/jogos/` (2048 MIT, Hextris GPL-3.0) num iframe do mesmo host; OK/amarelo ligados a começar/reiniciar; Back e botões coloridos fecham o jogo (códigos do Back por confirmar na TV).
 - Pendente: alojar `pagina/` fora do telemóvel (GitHub Pages por https? certificados da TV), gravar a app de forma definitiva, remover o mosaico "Teste" e os ficheiros de teste da TV.
+- Jogos (7): 2048, Hextris, Tetris, Pac-Man, Breakout, Corrida, T-Rex em `pagina/jogos/`. `fake(w,código)` envia teclas sintéticas para o iframe (OK→Espaço/N). Zoom e CSS por jogo (campos `z`, `css`) porque 1080p mostra-os pequenos. Testados em Chromium; falta testar na TV (desempenho do Pac-Man/Corrida em Chrome 53).

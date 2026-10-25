@@ -67,12 +67,15 @@ var TILES=[
  {n:'YouTube',k:'YOUTUBE',   c:'#d81f1f',ic:'play',   tag:'Vídeos',          sub:'Vídeos, música e canais que segues.'},
  {n:'Jogos',  c:'#6a3fcf',ic:'game',   tag:'Entretenimento',  sub:'Jogos que se jogam com o comando da TV.',
   sub_:[
-   {n:'2048',    game:'jogos/2048/index.html',   c:'#e6a23c',ic:'t2048',tag:'Puzzle',  sub:'Junta os números com as setas. OK recomeça.',
-     ok:'var g=w.gm;if(g.over){g.restart()}else if(g.won&&!g.keepPlaying){g.keepPlaying=true;g.actuator.continueGame()}',
-     reset:'w.gm.restart()'},
-   {n:'Hextris', game:'jogos/hextris/index.html',c:'#1c9bb8',ic:'hex',  tag:'Arcade',  sub:'Roda com ◄ ► e junta 3 cores. OK começa.',
-     ok:'var $=w.$;if($("#startBtn").is(":visible")){$("#startBtn").trigger("mousedown")}else if($("#restart").is(":visible")){$("#restart").trigger("mousedown")}',
-     reset:'w.$("#restartBtn").trigger("mousedown")'}
+   {n:'2048',     game:'jogos/2048/index.html',    c:'#e6a23c',ic:'t2048',  tag:'Puzzle',  sub:'Junta os números com as setas. OK recomeça.',
+     ok:'var g=w.gm;if(g.over){g.restart()}else if(g.won&&!g.keepPlaying){g.keepPlaying=true;g.actuator.continueGame()}',reset:'w.gm.restart()'},
+   {n:'Hextris',  game:'jogos/hextris/index.html', c:'#1c9bb8',ic:'hex',    tag:'Arcade',  sub:'Roda com ◄ ► e junta 3 cores. OK começa.',
+     ok:'var $=w.$;if($("#startBtn").is(":visible")){$("#startBtn").trigger("mousedown")}else if($("#restart").is(":visible")){$("#restart").trigger("mousedown")}',reset:'w.$("#restartBtn").trigger("mousedown")'},
+   {n:'Tetris',   game:'jogos/tetris/index.html',  c:'#2f6fdb',ic:'tetris', tag:'Clássico',sub:'Setas movem e rodam. OK começa.',ok:32,z:1.45,css:'body{background:#0b0f19}'},
+   {n:'Pac-Man',  game:'jogos/pacman/index.html',  c:'#d9a400',ic:'pacman', tag:'Arcade',  sub:'Setas para fugir. OK novo jogo, amarelo pausa.',ok:78,alt:80,z:1.9,css:'html,body{background:#000}#pacman{margin:0 auto}a{display:none}'},
+   {n:'Breakout', game:'jogos/breakout/index.html',c:'#c2255c',ic:'brick',  tag:'Arcade',  sub:'◄ ► mexem a raquete. OK lança a bola.',z:1.25},
+   {n:'Corrida',  game:'jogos/racer/index.html',   c:'#e8590c',ic:'car',    tag:'Corridas',sub:'▲ acelera, ◄ ► viram, ▼ trava.',z:1.25,css:'#controls,#fps{display:none!important}body{background:#000}#racer{margin:0 auto}'},
+   {n:'T-Rex',    game:'jogos/trex/index.html',    c:'#5c6b73',ic:'cactus', tag:'Corrida', sub:'▲ salta, ▼ baixa-se. OK recomeça.',z:2.1,css:'html,body{background:#000}'}
   ]}
 ];
 var MAIN=TILES,PILHA=[];
@@ -86,6 +89,11 @@ function ICON(t,bg){
  else if(t=='game')s+='<rect x="3" y="12" width="42" height="24" rx="12"/><path d="M13 20h3v3h3v3h-3v3h-3v-3h-3v-3h3z" fill="'+bg+'"/><circle cx="31" cy="21" r="2.4" fill="'+bg+'"/><circle cx="37" cy="27" r="2.4" fill="'+bg+'"/>';
  else if(t=='t2048')s+='<text x="24" y="31" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="19" fill="#fff">2048</text>';
  else if(t=='hex')s+='<path d="M24 4l17 10v20L24 44 7 34V14z" fill="none" stroke="#fff" stroke-width="4"/><path d="M24 14l8 5v10l-8 5-8-5V19z"/>';
+ else if(t=='tetris')s+='<g><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="18" y="6" width="12" height="12" rx="2"/><rect x="30" y="6" width="12" height="12" rx="2"/><rect x="18" y="18" width="12" height="12" rx="2"/><rect x="6" y="30" width="12" height="12" rx="2" opacity=".55"/></g>';
+ else if(t=='pacman')s+='<path d="M24 24L41 12A20 20 0 1 0 41 36z"/><circle cx="26" cy="12" r="0"/>';
+ else if(t=='brick')s+='<rect x="4" y="8" width="12" height="7" rx="1.5"/><rect x="18" y="8" width="12" height="7" rx="1.5"/><rect x="32" y="8" width="12" height="7" rx="1.5"/><rect x="11" y="17" width="12" height="7" rx="1.5"/><rect x="25" y="17" width="12" height="7" rx="1.5"/><circle cx="24" cy="31" r="3"/><rect x="14" y="40" width="20" height="4" rx="2"/>';
+ else if(t=='car')s+='<path d="M4 31l4-11a5 5 0 0 1 4.600-3h22.800A5 5 0 0 1 40 20l4 11v7h-6v-3H10v3H4z"/><circle cx="13" cy="30" r="3" fill="'+bg+'"/><circle cx="35" cy="30" r="3" fill="'+bg+'"/>';
+ else if(t=='cactus')s+='<rect x="20" y="6" width="9" height="36" rx="4.500"/><path d="M20 28h-5a4 4 0 0 1-4-4V16h5v8h4z"/><path d="M29 22h4v-6h5v8a4 4 0 0 1-4 4h-5z"/><rect x="4" y="41" width="40" height="3" rx="1.500"/>';
  else if(t=='back')s+='<path d="M30 8L14 24l16 16" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>';
  else s+='<g fill="none" stroke="#fff" stroke-width="3"><circle cx="24" cy="24" r="18"/><ellipse cx="24" cy="24" rx="8" ry="18"/><path d="M6 24h36M9 14h30M9 34h30"/></g>';
  return s+'</svg>';
@@ -122,6 +130,7 @@ function shade(h){var n=parseInt(h.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&2
  return 'rgb('+Math.round(r*.28)+','+Math.round(g*.28)+','+Math.round(b*.28)+')'}
 function show(){
  for(var i=0;i<TL.length;i++){$('t'+i).className='t'+(i==cur?' f':'');$('bg'+i).className=i==cur?'on':''}
+ var off=cur>3?cur-3:0;$('row').style.webkitTransform=$('row').style.transform='translateX(-'+(off*20.2)+'vw)';
  var t=TL[cur];
  $('htag').innerHTML=t.tag;$('hname').innerHTML=t.n;$('hsub').innerHTML=t.sub;
  $('ghost').innerHTML=ICON(t.ic,t.c).replace('<svg','<svg width="100%" height="100%"');
@@ -130,15 +139,18 @@ function aviso(s){$('err').innerHTML=s;clearTimeout(errT);errT=setTimeout(functi
 function fim(){busy=false;$('load').style.display='none'}
 function entrar(lista){PILHA.push({l:TL,c:cur});TL=lista.concat([{n:'Voltar',back:true,c:'#3a4156',ic:'back',tag:'Menu',sub:'Voltar ao início.'}]);cur=0;build()}
 function voltar(){if(!PILHA.length)return false;var p=PILHA.pop();TL=p.l;cur=p.c;build();return true}
+function fake(w,c){var d=w.document,tp=['keydown','keyup'];for(var i=0;i<2;i++){var e=d.createEvent('Event');e.initEvent(tp[i],true,true);e.keyCode=c;e.which=c;d.dispatchEvent(e)}}
 function fechaJogo(){if(gf){gf.parentNode.removeChild(gf);gf=null}window.focus()}
 function jogo(t){
  gf=document.createElement('iframe');gf.src=t.game;
  gf.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;border:0;background:#000;z-index:50';
  gf.onload=function(){try{var w=gf.contentWindow,d=w.document;w.focus();
+  if(t.z)d.documentElement.style.zoom=t.z;
+  if(t.css){var st=d.createElement('style');st.innerHTML=t.css;d.head.appendChild(st)}
   d.addEventListener('keydown',function(e){var k=e.keyCode;
    if(SAIR.indexOf(k)>=0&&k!=405){e.preventDefault();fechaJogo();return}
-   if(k==405){try{eval(t.reset)}catch(x){}return}
-   if(k==13){try{eval(t.ok)}catch(x){}}},true);}catch(e){}};
+   if(k==405){try{if(t.reset)eval(t.reset);else if(t.alt)fake(w,t.alt)}catch(x){}return}
+   if(k==13){try{if(typeof t.ok=='number')fake(w,t.ok);else if(t.ok)eval(t.ok)}catch(x){}}},true);}catch(e){}};
  document.body.appendChild(gf);
 }
 function abrir(){
