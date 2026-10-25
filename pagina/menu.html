@@ -1,0 +1,79 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>Início</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0b0f19;color:#fff;font-family:Arial,Helvetica,sans-serif}
+#bg{position:absolute;left:0;top:0;width:100%;height:100%;background:linear-gradient(160deg,#0b0f19 0%,#1a2342 60%,#24305e 100%)}
+#clock{position:absolute;right:5vw;top:5vh;font-size:4.2vw}
+#hi{position:absolute;left:5vw;top:6vh;font-size:3vw;color:#9aa4b8}
+.rowt{position:absolute;left:5vw;font-size:1.9vw;color:#9aa4b8}
+.row{position:absolute;left:5vw;right:0;white-space:nowrap}
+.t{display:inline-block;vertical-align:top;width:17vw;height:10.5vw;margin-right:1.6vw;border-radius:.9vw;position:relative;
+ -webkit-transition:-webkit-transform .12s,box-shadow .12s;transition:transform .12s,box-shadow .12s;box-shadow:0 .5vw 1.5vw rgba(0,0,0,.5)}
+.t.f{-webkit-transform:scale(1.1);transform:scale(1.1);box-shadow:0 0 0 .35vw #fff,0 1vw 3vw rgba(0,0,0,.7);z-index:2}
+.t .ic{position:absolute;left:0;right:0;top:1.2vw;text-align:center;font-size:4.2vw}
+.t .nm{position:absolute;left:1vw;bottom:.9vw;font-size:1.7vw;font-weight:bold}
+#msg{position:absolute;left:5vw;bottom:5vh;font-size:1.8vw;color:#ffd24a}
+</style></head><body><div id="bg"></div>
+<div id="hi">Início</div><div id="clock"></div>
+<div id="rows"></div><div id="msg"></div>
+<script>
+// ---- CONFIGURAÇÃO: editar aqui para mudar/adicionar mosaicos --------------
+var TV = '192.168.1.85:9223';           // porta DevTools da própria TV
+var ROWS = [
+ {titulo:'Aplicações', top:30, tiles:[
+  {n:'Netflix',     k:'NETFLIX',     c:'#b20710', i:'N'},
+  {n:'YouTube',     k:'YOUTUBE',     c:'#c4302b', i:'▶'},
+  {n:'Dailymotion', k:'DAILYMOTION', c:'#0b57d0', i:'d'},
+  {n:'Meteo',       k:'ACCUWEATHER', c:'#1f7a4d', i:'☀'},
+  {n:'Jogos',       k:'GAMECENTER',  c:'#6b46c1', i:'♞'}
+ ]}
+ // {titulo:'Web', top:60, tiles:[{n:'Exemplo', url:'http://...', c:'#2b6cb0', i:'W'}]}
+];
+// ---------------------------------------------------------------------------
+function $(i){return document.getElementById(i)}
+var rows=[],r=0,c=0,msgT=null;
+function build(){
+  var h='';
+  for(var a=0;a<ROWS.length;a++){
+    h+='<div class="rowt" style="top:'+(ROWS[a].top-6)+'vh">'+ROWS[a].titulo+'</div><div class="row" style="top:'+ROWS[a].top+'vh">';
+    for(var b=0;b<ROWS[a].tiles.length;b++){var t=ROWS[a].tiles[b];
+      h+='<div class="t" id="t'+a+'_'+b+'" style="background:'+t.c+'"><div class="ic">'+(t.i||'')+'</div><div class="nm">'+t.n+'</div></div>';}
+    h+='</div>';
+  }
+  $('rows').innerHTML=h; foco();
+}
+function foco(){
+  for(var a=0;a<ROWS.length;a++)for(var b=0;b<ROWS[a].tiles.length;b++){
+    var e=$('t'+a+'_'+b); e.className='t'+(a==r&&b==c?' f':'');}
+}
+function msg(s,ms){$('msg').innerHTML=s;clearTimeout(msgT);if(ms)msgT=setTimeout(function(){$('msg').innerHTML=''},ms)}
+function lancar(k,nome){
+  msg('A abrir '+nome+'...');
+  var x=new XMLHttpRequest();x.open('GET','http://'+TV+'/json',true);
+  x.onerror=function(){msg('Sem ligação ao launcher da TV',4000)};
+  x.onload=function(){try{
+    var ws=JSON.parse(x.responseText)[0].webSocketDebuggerUrl.replace(/^ws:\/\/[^\/]+/,'ws://'+TV);
+    var w=new WebSocket(ws);
+    w.onopen=function(){w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{returnByValue:true,
+      expression:"UI.popAllModule(); startThirdPartyApp(APPNAME."+k+",APPNAME."+k+",CMDType.NATIVEAPP,CMDMethod.MENU,false); 'ok'"}}))};
+    w.onmessage=function(){w.close();msg('',0)};
+    w.onerror=function(){msg('Erro a falar com o launcher',4000)};
+  }catch(e){msg('Erro: '+e.message,4000)}};
+  x.send();
+}
+function ok(){var t=ROWS[r].tiles[c];if(t.url){location.href=t.url}else{lancar(t.k,t.n)}}
+document.addEventListener('keydown',function(e){
+  var k=e.keyCode,m=true;
+  if(k==37){if(c>0)c--}
+  else if(k==39){if(c<ROWS[r].tiles.length-1)c++}
+  else if(k==38){if(r>0){r--;c=Math.min(c,ROWS[r].tiles.length-1)}}
+  else if(k==40){if(r<ROWS.length-1){r++;c=Math.min(c,ROWS[r].tiles.length-1)}}
+  else if(k==13){ok()}
+  else m=false;
+  if(m){e.preventDefault();foco()}
+},true);
+function relogio(){var d=new Date(),p=function(n){return n<10?'0'+n:n};$('clock').innerHTML=p(d.getHours())+':'+p(d.getMinutes())}
+relogio();setInterval(relogio,15000);build();
+</script></body></html>
