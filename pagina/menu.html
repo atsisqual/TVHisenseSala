@@ -65,8 +65,18 @@ var CIDADE={nome:'Vila Nova de Famalicão',lat:41.41,lon:-8.52};
 var TILES=[
  {n:'Netflix',k:'NETFLIX',   c:'#c40a16',ic:'netflix',tag:'Séries e filmes', sub:'Os teus filmes e séries favoritos.'},
  {n:'YouTube',k:'YOUTUBE',   c:'#d81f1f',ic:'play',   tag:'Vídeos',          sub:'Vídeos, música e canais que segues.'},
- {n:'Jogos',  k:'GAMECENTER',c:'#6a3fcf',ic:'game',   tag:'Entretenimento',  sub:'Jogos para toda a família.'}
+ {n:'Jogos',  c:'#6a3fcf',ic:'game',   tag:'Entretenimento',  sub:'Jogos que se jogam com o comando da TV.',
+  sub_:[
+   {n:'2048',    game:'jogos/2048/index.html',   c:'#e6a23c',ic:'t2048',tag:'Puzzle',  sub:'Junta os números com as setas. OK recomeça.',
+     ok:'var g=w.gm;if(g.over){g.restart()}else if(g.won&&!g.keepPlaying){g.keepPlaying=true;g.actuator.continueGame()}',
+     reset:'w.gm.restart()'},
+   {n:'Hextris', game:'jogos/hextris/index.html',c:'#1c9bb8',ic:'hex',  tag:'Arcade',  sub:'Roda com ◄ ► e junta 3 cores. OK começa.',
+     ok:'var $=w.$;if($("#startBtn").is(":visible")){$("#startBtn").trigger("mousedown")}else if($("#restart").is(":visible")){$("#restart").trigger("mousedown")}',
+     reset:'w.$("#restartBtn").trigger("mousedown")'}
+  ]}
 ];
+var MAIN=TILES,PILHA=[];
+var SAIR=[8,27,461,10009,405,406,403,404]; /* teclas que fecham o jogo (Back/Exit e cores) */
 /* ======================== */
 function ICON(t,bg){
  var s='<svg viewBox="0 0 48 48" fill="#fff" stroke="none">';
@@ -74,6 +84,9 @@ function ICON(t,bg){
  else if(t=='play')s+='<rect x="3" y="10" width="42" height="28" rx="9"/><path d="M19 17l12 7-12 7z" fill="'+bg+'"/>';
  else if(t=='dm')s+='<path fill-rule="evenodd" d="M34 5v38h-7v-4.4A13 13 0 1 1 27 17.4V5zM20 20.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15z"/>';
  else if(t=='game')s+='<rect x="3" y="12" width="42" height="24" rx="12"/><path d="M13 20h3v3h3v3h-3v3h-3v-3h-3v-3h3z" fill="'+bg+'"/><circle cx="31" cy="21" r="2.4" fill="'+bg+'"/><circle cx="37" cy="27" r="2.4" fill="'+bg+'"/>';
+ else if(t=='t2048')s+='<text x="24" y="31" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="19" fill="#fff">2048</text>';
+ else if(t=='hex')s+='<path d="M24 4l17 10v20L24 44 7 34V14z" fill="none" stroke="#fff" stroke-width="4"/><path d="M24 14l8 5v10l-8 5-8-5V19z"/>';
+ else if(t=='back')s+='<path d="M30 8L14 24l16 16" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>';
  else s+='<g fill="none" stroke="#fff" stroke-width="3"><circle cx="24" cy="24" r="18"/><ellipse cx="24" cy="24" rx="8" ry="18"/><path d="M6 24h36M9 14h30M9 34h30"/></g>';
  return s+'</svg>';
 }
@@ -97,26 +110,42 @@ function WD(c){
  if(c>=85&&c<=86)return 'Neve';if(c>=95)return 'Trovoada';return 'Variável';
 }
 function $(i){return document.getElementById(i)}
-var cur=0,busy=false,errT=null;
+var cur=0,busy=false,errT=null,TL=TILES,gf=null;
 function build(){
  var bg='',row='';
- for(var i=0;i<TILES.length;i++){var t=TILES[i];
+ for(var i=0;i<TL.length;i++){var t=TL[i];
   bg+='<div id="bg'+i+'" style="background:radial-gradient(120% 90% at 78% 12%,'+t.c+' 0%,'+shade(t.c)+' 55%,#05070d 100%)"></div>';
   row+='<div class="t" id="t'+i+'"><div class="card" style="background:'+t.c+'">'+ICON(t.ic,t.c)+'</div><div class="lb">'+t.n+'</div></div>';}
- $('bgs').innerHTML=bg;$('row').innerHTML=row;show();
+ $('bgs').innerHTML=bg;$('row').innerHTML=row;$('rowt').innerHTML=PILHA.length?'Jogos':'As tuas apps';show();
 }
 function shade(h){var n=parseInt(h.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;
  return 'rgb('+Math.round(r*.28)+','+Math.round(g*.28)+','+Math.round(b*.28)+')'}
 function show(){
- for(var i=0;i<TILES.length;i++){$('t'+i).className='t'+(i==cur?' f':'');$('bg'+i).className=i==cur?'on':''}
- var t=TILES[cur];
+ for(var i=0;i<TL.length;i++){$('t'+i).className='t'+(i==cur?' f':'');$('bg'+i).className=i==cur?'on':''}
+ var t=TL[cur];
  $('htag').innerHTML=t.tag;$('hname').innerHTML=t.n;$('hsub').innerHTML=t.sub;
  $('ghost').innerHTML=ICON(t.ic,t.c).replace('<svg','<svg width="100%" height="100%"');
 }
 function aviso(s){$('err').innerHTML=s;clearTimeout(errT);errT=setTimeout(function(){$('err').innerHTML=''},5000)}
 function fim(){busy=false;$('load').style.display='none'}
+function entrar(lista){PILHA.push({l:TL,c:cur});TL=lista.concat([{n:'Voltar',back:true,c:'#3a4156',ic:'back',tag:'Menu',sub:'Voltar ao início.'}]);cur=0;build()}
+function voltar(){if(!PILHA.length)return false;var p=PILHA.pop();TL=p.l;cur=p.c;build();return true}
+function fechaJogo(){if(gf){gf.parentNode.removeChild(gf);gf=null}window.focus()}
+function jogo(t){
+ gf=document.createElement('iframe');gf.src=t.game;
+ gf.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;border:0;background:#000;z-index:50';
+ gf.onload=function(){try{var w=gf.contentWindow,d=w.document;w.focus();
+  d.addEventListener('keydown',function(e){var k=e.keyCode;
+   if(SAIR.indexOf(k)>=0&&k!=405){e.preventDefault();fechaJogo();return}
+   if(k==405){try{eval(t.reset)}catch(x){}return}
+   if(k==13){try{eval(t.ok)}catch(x){}}},true);}catch(e){}};
+ document.body.appendChild(gf);
+}
 function abrir(){
- if(busy)return;var t=TILES[cur];
+ if(busy)return;var t=TL[cur];
+ if(t.back){voltar();return}
+ if(t.sub_){entrar(t.sub_);return}
+ if(t.game){jogo(t);return}
  if(t.url){location.href=t.url;return}
  busy=true;$('ltx').innerHTML='A abrir '+t.n+'…';$('load').style.display='block';setTimeout(fim,7000);
  var x=new XMLHttpRequest();x.open('GET','http://'+TV+'/json',true);
@@ -133,9 +162,11 @@ function abrir(){
 }
 document.addEventListener('keydown',function(e){
  var k=e.keyCode,m=true;
+ if(gf)return;
  if(busy&&k!=8){return}
+ if((k==8||k==461||k==10009)&&PILHA.length){voltar();e.preventDefault();return}
  if(k==37){if(cur>0){cur--;show()}}
- else if(k==39){if(cur<TILES.length-1){cur++;show()}}
+ else if(k==39){if(cur<TL.length-1){cur++;show()}}
  else if(k==13){abrir()}
  else m=false;
  if(m)e.preventDefault();

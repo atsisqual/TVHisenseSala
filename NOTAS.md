@@ -86,3 +86,10 @@ Box Android/Google TV no HDMI (Chromecast com Google TV, Xiaomi TV Stick, Fire T
 - No Browser da TV, `hisense://debug` abre o formulário (App Name, Thumbnail, IconSmall, IconLarge, App Url, INSTALL). **O URL tem de começar por http/https** (file:// recusado).
 - A app instalada ("Teste", `http://192.168.1.127:8099/d.html`) aparece na lista de apps e **recebe as teclas do comando** (keydown/keyup 38/40, ArrowUp/ArrowDown). `opener` é null, `Hisense` vazio, sem UI/startThirdPartyApp.
 - Ideia em teste: a página fala com `ws://192.168.1.85:9223` (DevTools) para pedir ao launcher que abra as apps nativas. Pode falhar por CORS no `/json` (precisa do UUID da página). Falta decidir onde alojar a página de forma permanente (GitHub Pages por https? certificados antigos na TV).
+
+## Menu premium + jogos (25-10-2026)
+- `pagina/menu.html` é a app instalada (App Url http://<host>/menu.html via `hisense://debug`, ou `scripts/abrir_url.py` por CDP, sem usar o comando da TV). Abre apps nativas chamando `Runtime.evaluate` no DevTools da própria TV (`http://192.168.1.85:9223/json` → WebSocket), sem CORS. Configuração no topo do ficheiro (TILES, CIDADE, TV).
+- Versão leve para a TV (sem transições de opacidade/sombra grandes): a A6100 engasga com fades em ecrã inteiro.
+- Tempo: open-meteo (https com fallback http), Vila Nova de Famalicão (41.41, -8.52); cache em localStorage. Por confirmar que a TV aceita o certificado.
+- Jogos em `pagina/jogos/` (2048 MIT, Hextris GPL-3.0) num iframe do mesmo host; OK/amarelo ligados a começar/reiniciar; Back e botões coloridos fecham o jogo (códigos do Back por confirmar na TV).
+- Pendente: alojar `pagina/` fora do telemóvel (GitHub Pages por https? certificados da TV), gravar a app de forma definitiva, remover o mosaico "Teste" e os ficheiros de teste da TV.
