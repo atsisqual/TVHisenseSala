@@ -24,7 +24,11 @@ function reg(e){cnt++;var c=e.keyCode||e.which||e.charCode;log.unshift(cnt+' '+e
 ['keydown','keyup','keypress'].forEach(function(t){document.addEventListener(t,reg,true);window.addEventListener(t,reg,true)});
 document.body.setAttribute('tabindex','0');document.body.focus();
 </script></body></html>"""
+import sys
 tv = TV()
+if "gravar" in sys.argv:  # só grava como d.html (URL curto para instalar como app)
+    print("write d.html ->", tv.ev("Hisense.File.write('d.html',%s,1)" % json.dumps(HTML)))
+    sys.exit()
 print("write ->", tv.ev("Hisense.File.write(%s,%s,1)" % (json.dumps(F), json.dumps(HTML))))
 nome = "tvmenu" + str(int(time.time()))
 tv.ev("UI.popAllModule(); startThirdPartyApp(APPNAME.THIRDPARTY,%s,CMDType.NATIVEAPP,CMDMethod.MENU,false,\"#FFFFFF\",%s,StoreType.HISENSE); true" % (json.dumps(URL + "?v=" + nome), json.dumps(nome)))
