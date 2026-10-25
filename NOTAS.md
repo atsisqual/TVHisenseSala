@@ -38,3 +38,9 @@ Dar à TV um menu de apps com aspeto Android TV, e poder adicionar atalhos. Não
 
 ## Alternativa permanente
 Box Android/Google TV no HDMI (Chromecast com Google TV, Xiaomi TV Stick, Fire TV Stick): único caminho para um launcher Android TV a sério.
+
+## Leitura do código do launcher (25-10-2026, a partir do scrape)
+- `Hisense.File` tem: read, write, exists, delete, move, readCacheIndex, cache, downloadAsync. (Não verificado se aceita caminhos fora da pasta de trabalho do launcher.)
+- `downloadAsync`/`cache` servem para os ícones: `getLocalAppImgUrl` troca um URL de imagem por uma cópia local; se não existir, usa o URL e põe-no na lista `launcherNeedDownLoadAppImgUrl` para descarregar. Por isso o ícone de um mosaico em `BrowserAppInfo.json` tem de ser um URL de imagem que exista.
+- `mainTiles.js` (161 KB): o ecrã inicial usa `launcherTiles.initSequence`; há modo de edição (`launcher.isEditMode`), alvo de adição (`launcher.Adtarget`) e submódulo `UI.pushSubModule("launcher","allApps",true)` (linha ~1646). Hipótese (por confirmar): o caminho oficial para pôr um mosaico na fila do ecrã inicial é o modo de edição + "adicionar app", guardado por `setRememberEditAppToNativeFile`.
+- `sdk/UI.js`: `UI.dispatchKeyEvent` na linha 2623, chamada a partir das linhas 410, 2526, 2541, 2616; `UI.processKey` na linha 1840.
